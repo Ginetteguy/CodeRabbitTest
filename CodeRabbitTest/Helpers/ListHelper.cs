@@ -46,5 +46,37 @@ namespace Helpers
                 return liste1.SequenceEqual(liste2);
             }
         }
+
+        /// <summary>
+        /// Diviser une liste en plusieurs listes de n éléments
+        /// </summary>
+        /// <typeparam name="T">Type de la liste</typeparam>
+        /// <param name="liste">Liste à spliter</param>
+        /// <param name="taille">Taille des sous listes désirée</param>
+        /// <returns>Liste de liste de n éléments</returns>
+        public static IEnumerable<IEnumerable<T>> Paginate<T>(IEnumerable<T> liste, int taille)
+        {
+            if (liste == null || !liste.Any())
+                throw new ArgumentException("La liste est vide, c'est à l'appelant de gérer cela.");
+            if (taille <= 0) 
+                throw new ArgumentException("Le nombre d'éléments voulu dans les liste découpées doit être supérieur à 0.", nameof(taille));
+            return PaginateIterator(liste, taille);
+
+        }
+
+        /// <summary>
+        /// Itération pour diviser une liste en plusieurs listes de n éléments 
+        /// </summary>
+        /// <typeparam name="T">Type de la liste</typeparam>
+        /// <param name="liste">Liste à spliter</param>
+        /// <param name="taille">Taille des sous listes désirée</param>
+        /// <returns>Liste de liste de n éléments</returns>
+        private static IEnumerable<IEnumerable<T>> PaginateIterator<T>(IEnumerable<T> liste, int taille)
+        {
+            for (int i = 0; i < liste.Count(); i += taille)
+            {
+                yield return liste.Skip(i).Take(taille);
+            }
+        }
     }
 }
