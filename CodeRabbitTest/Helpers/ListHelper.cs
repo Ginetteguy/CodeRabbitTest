@@ -21,34 +21,29 @@ namespace Helpers
         {
             if (liste1 == liste2)
                 return true;
+
+            if (liste1 == null || liste2 == null)
+                return false;
+
+            if (liste1.Count != liste2.Count) // Pas le même nombre d'éléments
+                return false;
+
+            if (liste1.Count == 0)  // Aucun élément dans les listes
+                return true;
+
+            // Même nombre d'éléments et au moins un élément dans chaque liste
+            if (ignoreOrder)
+            {
+                var sortedList1 = new List<T>(liste1);
+                var sortedList2 = new List<T>(liste2);
+                sortedList1.Sort();
+                sortedList2.Sort();
+
+                return sortedList1.SequenceEqual(sortedList2);
+            }
             else
             {
-                if (liste1 == null || liste2 == null)
-                    return false;
-                else
-                {
-                    if (liste1.Count != liste2.Count) // Pas le même nombre d'éléments
-                        return false;
-                    else if (liste1.Count == 0)  // Aucun élément dans les listes
-                        return true;
-                    else
-                    {
-                        // Même nombre d'éléments et au moins un élément dans chaque liste
-                        if (ignoreOrder)
-                            return true;
-                        else
-                        {
-                            // Vérification de l'ordre des éléments en parcourant tous les éléments si besoin
-                            for (int i = 0; i < liste1.Count; i++)
-                            {
-                                if (liste2.IndexOf(liste1[i]) != i)
-                                    return false;
-                            }
-
-                            return true;
-                        }
-                    }
-                }
+                return liste1.SequenceEqual(liste2);
             }
         }
     }
